@@ -1,0 +1,32 @@
+﻿@using GridMvc.Html
+@model IEnumerable<MVCUniversity.Models.Student>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Students</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(student => student.ID).Titled("ID").SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
+            columns.Add(student => student.FirstName).Titled("Name").RenderValueAs(student => student.FirstName + " " + student.LastName);
+            columns.Add(student => student.GPA).Titled("GPA");
+            columns.Add(student => student.Credits).Titled("Credit Hours");
+            columns.Add(student => student.Major).Titled("Major");
+            columns.Add().Encoded(false).Sanitized(false).RenderValueAs(student => CustomRenderingOfColumn(student));
+        }).Sortable(true).Filterable(true).WithMultipleFilters().WithPaging(10)
+
+@helper CustomRenderingOfColumn(MVCUniversity.Models.Student item)
+{
+    <td class="text-center">
+        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>  
+}
+

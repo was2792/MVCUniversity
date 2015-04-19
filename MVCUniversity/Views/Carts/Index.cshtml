@@ -1,0 +1,34 @@
+﻿@using GridMvc.Html
+@model IEnumerable<MVCUniversity.Models.Cart>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Carts</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(cart => cart.CourseID).Titled("Course ID").SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
+            columns.Add(cart => cart.Course.Title).Titled("Course Name");
+            columns.Add(cart => cart.Course.ProfessorID).Titled("Professor ID");
+            columns.Add(cart => cart.Course.Professor.FirstName).Titled("Professor Name").RenderValueAs(cart => cart.Course.Professor.FirstName + " " + cart.Course.Professor.LastName);
+            columns.Add(cart => cart.StudentID).Titled("Student ID");
+            columns.Add(cart => cart.Student.FirstName).Titled("Student Name").RenderValueAs(enrollment => enrollment.Student.FirstName + " " + enrollment.Student.LastName);
+            columns.Add(cart => cart.Course.Credits).Titled("Credit Hours");
+            columns.Add().Encoded(false).Sanitized(false).RenderValueAs(cart => CustomRenderingOfColumn(cart));
+        }).Sortable(true).Filterable(true).WithMultipleFilters().WithPaging(10)
+
+@helper CustomRenderingOfColumn(MVCUniversity.Models.Cart item)
+{
+    <td class="text-center">
+        @Html.ActionLink("Edit", "Edit", new { studentID = item.StudentID, courseID = item.CourseID }) |
+        @Html.ActionLink("Details", "Details", new { studentID = item.StudentID, courseID = item.CourseID }) |
+        @Html.ActionLink("Delete", "Delete", new { studentID = item.StudentID, courseID = item.CourseID })
+    </td>
+}
+
