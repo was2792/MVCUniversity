@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVCUniversity.Models
 {
@@ -16,15 +17,32 @@ namespace MVCUniversity.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        public string DisplayName
+        {
+            get
+            {
+                string dspFirstName = string.IsNullOrWhiteSpace(this.FirstName) ? "" : this.FirstName;
+                string dspLastName = string.IsNullOrWhiteSpace(this.LastName) ? "" : this.LastName;
+
+                return string.Format("{0} {1}", dspFirstName, dspLastName);
+            }
+        }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultConnection2")
         {
         }
 
+       
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
